@@ -1,8 +1,6 @@
 package com.darlanmarangoni.FestivalDasEstatuasDeGelo;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -15,22 +13,22 @@ public class Main {
         for (int i = 0; i < numeroDeInstancias; i++) {
             int numeroTipoDeBlocos = scanner.nextInt();
             int comprimentoDesejado = scanner.nextInt();
-            List<Integer> blocos = new ArrayList<>(0);
+            int[] blocos = new int[numeroTipoDeBlocos];
             for (int j = 0; j < numeroTipoDeBlocos; j++) {
-                blocos.add(scanner.nextInt());
+                blocos[j] = scanner.nextInt();
             }
-            blocos.sort(Comparator.reverseOrder());
-            int quandidadeDeBlocos = 0;
-            for (Integer bloco : blocos) {
-                int quantidadeDeBlocosPorMedida = comprimentoDesejado / bloco;
-                quandidadeDeBlocos += quantidadeDeBlocosPorMedida;
-                comprimentoDesejado = comprimentoDesejado % bloco;
-                if (comprimentoDesejado % bloco == 0) {
-                    break;
+
+            int[] dp = new int[comprimentoDesejado + 1];
+            Arrays.fill(dp, Integer.MAX_VALUE);
+            dp[0] = 0;
+            for (int len = 1; len <= comprimentoDesejado; len++) {
+                for (int bloco : blocos) {
+                    if (bloco <= len && dp[len - bloco] != Integer.MAX_VALUE) {
+                        dp[len] = Math.min(dp[len], dp[len - bloco] + 1);
+                    }
                 }
             }
-            System.out.println(quandidadeDeBlocos);
+            System.out.println(dp[comprimentoDesejado]);
         }
-
     }
 }
